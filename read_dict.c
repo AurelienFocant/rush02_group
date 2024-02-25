@@ -198,7 +198,7 @@ int main(int argc, char **argv)
 	char **keys;
 	char **values;
 
-	if (argc == 1 || argc > 3)
+	if (argc < 2 || argc > 3)
 		return (1);
 
 

@@ -2,34 +2,48 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#define HUNDREDS 0
+#define DOZENS 1
+#define UNITS 2
+
 /* read this file second
  * and start at the bottom
  * above are only help functions
  */
 
+
+int		ft_strcmp(char *s1, char *s2)
+{
+	int i;
+
+	i = 0;
+	while (s1[i] && s1[i] == s2[i])
+		i++;
+	return (s1[i] - s2[i]);
+}
+
+
 void	ft_putstr(char *str)
 {
-	while (*str)
-		write(1, str++, 1);
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
 }
 
 int		ft_find_index(char c, int pos, char **keys)
 {
 	int i;
-	int count;
-
-	/* to be replaced by line_count
-	 * == size of keys[]
-	 * now i think about it :p
-	 */
-	count = 40;
 
 	i = 0;
-	while (i < count)
+	while (keys[i])
 	{
-		if (pos == 1)
+		if (pos == DOZENS)
 		{
-			// needs exceptions for 10->19
 			if (c == keys[i][0] && '0' == keys[i][1])
 				return i;
 		}
@@ -41,51 +55,112 @@ int		ft_find_index(char c, int pos, char **keys)
 	return (i);
 }
 
+int		 ft_find_index_str(char *str, char **keys)
+{
+	int i;
+
+	i = 0;
+	while (keys[i])
+	{
+		if (ft_strcmp(str, keys[i]) == 0)
+			return (i);
+		i++;
+	}
+	return (i);
+}
+
 void	ft_print_zero(char c, char **keys, char **values)
 {
-	int a;
+	int index;
 
-	a = ft_find_index(c, 2, keys);
-	ft_putstr(values[a]);
+	index = ft_find_index(c, 2, keys);
+	ft_putstr(values[index]);
 	ft_putstr("\n");
 }
 
-void	ft_print_numero(char c, int pos, char **keys, char **values)
+void	ft_print_hundreds(char c, char **keys, char **values)
 {
-	/* feature missing : if just 0 write zero, or "and"
-	 * like in "one hundrer AND ..."
-	 */
+	int pos;
+	int index;
 
-	/* could probably be very much simplified
-	 */
+	pos = HUNDREDS;
 
-	if (pos == 0)
+	if (c != 0)
 	{
-		if (c != '0')
-		{
-			int a = ft_find_index(c, pos, keys);
-			printf("%s ", values[a]);
-			printf("hundred ");
-		}
+		index = ft_find_index(c, pos, keys);
+		ft_putstr(values[index]);
+		index = ft_find_index_str("100", keys);
+		ft_putstr(" ");
+		ft_putstr(values[index]);
 	}
+}
 
-	if (pos == 1)
-	{
-		if (c != '0')
-		{
-			int a = ft_find_index(c, pos, keys);
-			printf("%s ", values[a]);
-		}
-	}
+void	ft_print_tens(char c, char d, char **keys, char **values)
+{
+	char str[3];
+	int index;
 
-	if (pos == 2)
+	str[0] = c;
+	str[1] = d;
+	str[2] = '\0';	
+
+	index = ft_find_index_str(str, keys);
+	ft_putstr(values[index]);
+}
+
+void	ft_print_dozens(char c, char **keys, char **values)
+{
+	int pos;
+	int index;
+
+	pos = DOZENS;
+
+	if (c != 0)
 	{
-		if (c != '0')
-		{
-			int a = ft_find_index(c, pos, keys);
-			printf("%s", values[a]);
-		}
+		index = ft_find_index(c, pos, keys);
+		ft_putstr(values[index]);
 	}
+}
+
+void	ft_print_units(char c, char **keys, char **values)
+{
+	int pos;
+	int index;
+
+	pos = UNITS;
+
+	if (c != 0)
+	{
+		index = ft_find_index(c, pos, keys);
+		ft_putstr(values[index]);
+	}
+}
+
+void	ft_print_orderof_magnitude(int mag, char **keys, char **values)
+{
+	int index;
+
+		if (mag > 0)
+		{
+			if (mag == 3)
+			{
+				index = ft_find_index_str("1000000000", keys);
+				ft_putstr(values[index]);
+				ft_putstr(" ");
+			}
+			else if (mag == 2)
+			{
+				index = ft_find_index_str("1000000", keys);
+				ft_putstr(values[index]);
+				ft_putstr(" ");
+			}
+			else if (mag == 1)
+			{
+				index = ft_find_index_str("1000", keys);
+				ft_putstr(values[index]);
+				ft_putstr(" ");
+			}
+		}
 }
 
 void	ft_print_number(char *nbr, char **keys, char **values)
@@ -121,11 +196,11 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	 * 2 if units
 	 */
 	if (len % 3 == 0)
-		pos = 0;
+		pos = HUNDREDS;
 	else if (len % 3 == 2)
-		pos = 1;
+		pos = DOZENS;
 	else if (len % 3 == 1)
-		pos = 2;
+		pos = UNITS;
 
 
 	/* has to know how many groups
@@ -148,25 +223,46 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	int i = 0;
 	while (i < len)
 	{
-		ft_print_numero(nbr[i], pos, keys, values);
-		if (pos == 2)
-		{	
-			if (mag >= 0)
+		if (pos == HUNDREDS)
+		{
+			ft_print_hundreds(nbr[i], keys, values);
+			ft_putstr(" ");
+			pos = (pos + 1) % 3;
+			i++;
+		}
+		else if (pos == DOZENS)
+		{
+			if (nbr[i] == '1')
 			{
-				if (mag > 1)
-					printf(" ");
-				else
-					printf("\n");
-				if (mag == 3)
-					printf("billion ");
-				else if (mag == 2)
-					printf("million ");
-				else if (mag == 1)
-					printf("thousand ");
+				ft_print_tens(nbr[i], nbr[i + 1], keys, values);
+				if (mag > 0)
+					ft_putstr(" ");
+				else if (mag == 0)
+					ft_putstr("\n");
+				ft_print_orderof_magnitude(mag, keys, values);
 				mag--;
+				pos = (pos + 2) % 3;
+				i += 2;
+			}
+			else
+			{
+				ft_print_dozens(nbr[i], keys, values);
+				ft_putstr(" ");
+				pos = (pos + 1) % 3;
+				i++;
 			}
 		}
-		pos = (pos + 1) % 3;
-		i++;
+		else if (pos == UNITS)
+		{
+			ft_print_units(nbr[i], keys, values);
+			if (mag > 0)
+				ft_putstr(" ");
+			else if (mag == 0)
+				ft_putstr("\n");
+			ft_print_orderof_magnitude(mag, keys, values);
+			mag--;
+			pos = (pos + 1) % 3;
+			i++;
+		}
 	}
 }
