@@ -10,9 +10,9 @@ OBJ = $(SRC:.c=.o)
 
 
 
-all : $(EXEC) clean
+all : $(EXEC)
 
-main.o : main.c 
+maintest.o : maintest.c 
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 error.o : error.c
