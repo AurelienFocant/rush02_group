@@ -5,8 +5,8 @@ CFLAGS += -Wall -Werror -Wextra
 EXEC = rush-02
 
 SRC = \
-	  src/main.c\
-	  src/error.c\
+	  write_num.c\
+	  read_dict.c
 
 
 OBJ = $(SRC:.c=.o)
@@ -15,16 +15,17 @@ OBJ = $(SRC:.c=.o)
 
 all : $(EXEC)
 
-maintest.o : maintest.c
+$(EXEC) : $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
+write_num.o : write_num.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-error.o : error.c
+read_dict.o : read_dict.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 									#AJOUTER LES .c necessaires
 
-$(EXEC) : $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
 
 clean :
 	rm -rf $(OBJ)
