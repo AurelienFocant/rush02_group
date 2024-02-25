@@ -43,18 +43,24 @@ int	ft_count_chars(int fd)
 	return count_chars;
 }
 
-void ft_copydict_instring(char *str, int fd)
+int	ft_copydict_instring(char *str, int fd)
 {
-	int i;	
+	int i;
 	char buff;
 
 	i = 0;
 	while (read(fd, &buff, 1))
 	{
+		if (read(fd, &buff, 1) == -1)
+		{
+			ft_putstr("Dict Error\n");
+			return (-1);
+		}
 		str[i] = buff;
 		i++;
 	}
 	str[i] = '\0';
+	return (0);
 }
 
 int	ft_isnum(char c)
@@ -82,7 +88,7 @@ int	ft_isalpha(char c)
 int	ft_count_lines(char *str)
 {
 	int count;
-	
+
 	count = 0;
 	while (*str)
 	{
@@ -102,7 +108,7 @@ int	ft_count_lines(char *str)
 
 
 /* basically a ft_strlen
- * but adds more stopping points 
+ * but adds more stopping points
  * than just '\0'
  */
 int		ft_lensep(char *str)
@@ -116,7 +122,7 @@ int		ft_lensep(char *str)
 }
 
 
-/* we enter this function when 
+/* we enter this function when
  * we find a key == numero in the dict
  * or a value == a letter in the dict
  * we find the len of that word until next sep
@@ -161,7 +167,7 @@ void	ft_fill_keys(char **keys, char *str)
 			str++;
 		if (ft_isnum(*str) && *str)
 		{
-			keys[i] = ft_fill_word(str); 
+			keys[i] = ft_fill_word(str);
 			i++;
 			while(ft_isnum(*str))
 					str++;
@@ -184,7 +190,7 @@ void	ft_fill_values(char **values, char *str)
 			str++;
 		if (ft_isalpha(*str) && *str)
 		{
-			values[i] = ft_fill_word(str); 
+			values[i] = ft_fill_word(str);
 			i++;
 			while(ft_isalpha(*str))
 					str++;
@@ -217,9 +223,14 @@ int		read_every_char(int fd, char **argv)
 	if (fd == -1)
 	{
 		ft_putstr("Dict Error\n");
-		return (-1);                      // Erreur : fonction return 1, si read_every_char(...) == 1   ---> arreter le programmme
+		return (-1);                      // Erreur : fonction return -1, si read_every_char(...) == -1   ---> arreter le programmme depuis le main
 	}
 	char_count = ft_count_chars(fd);
+	if (char_count == -1)
+	{
+		ft_putstr("Dict Error\n");
+		return (-1);
+	}
 	close(fd);
 	return (char_count);
 }
@@ -235,14 +246,12 @@ int main(int argc, char **argv)
 	// ERROR CASE    + Error.c file
 	if (argc == 1 || argc > 3)
 		return (-1);
-	if (read_every_char(fd, argv) == -1)
-		return (-1);
-
 	/* opens the file, read every char, close the file
 	 * to know the size of str
 	 */
-	char_count = read_every_char(fd, argv);	
-
+	char_count = read_every_char(fd, argv);
+	if (char_count == -1)
+		return (-1);
 
 	/* allocate the string to the right size
 	 * open the file again
@@ -254,9 +263,14 @@ int main(int argc, char **argv)
 		ft_putstr("Error\n");
 		return (-1);
 	}
-		
+
 	fd = open(argv[1], 0);
-	ft_copydict_instring(str, fd);  
+	if (fd == -1)
+		return (-1);
+
+	ft_copydict_instring(str, fd);
+	if (ft_copydict_instring(str, fd) == -1)
+		return (-1);
 
 
 	/* count lines, doesnt count empty lines
@@ -298,7 +312,7 @@ int main(int argc, char **argv)
 	int i = 0;
 	while (keys[i])
 	{
-		printf("key: %s value: %s\n", keys[i], values[i]);	
+		printf("key: %s value: %s\n", keys[i], values[i]);
 		i++;
 	}
 	*/
@@ -310,7 +324,7 @@ int main(int argc, char **argv)
 	 */
 	ft_print_number(argv[2], keys, values);
 
-	/* lets not forget to free everything, 
+	/* lets not forget to free everything,
 	 * should check for null pointers,
 	 * etc etc
 	 * could run valgrind when file a bit cleaner
