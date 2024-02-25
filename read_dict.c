@@ -33,6 +33,11 @@ int	ft_count_chars(int fd)
 	count_chars = 0;
 	while (read(fd, &buff, 1))
 	{
+		if (read(fd, &buff, 1) == -1)
+		{
+			ft_putstr("Dict Error\n");
+			return (-1);
+		}
 		count_chars++;
 	}
 	return count_chars;
@@ -209,12 +214,15 @@ int		read_every_char(int fd, char **argv)
 	int		char_count;
 
 	fd = open(argv[1], 0);
+	if (fd == -1)
+	{
+		ft_putstr("Dict Error\n");
+		return (-1);                      // Erreur : fonction return 1, si read_every_char(...) == 1   ---> arreter le programmme
+	}
 	char_count = ft_count_chars(fd);
 	close(fd);
 	return (char_count);
 }
-
-int
 
 int main(int argc, char **argv)
 {
@@ -224,10 +232,11 @@ int main(int argc, char **argv)
 	int line_count;
 	char **keys;
 	char **values;
-
+	// ERROR CASE    + Error.c file
 	if (argc == 1 || argc > 3)
-		return (1);
-
+		return (-1);
+	if (read_every_char(fd, argv) == -1)
+		return (-1);
 
 	/* opens the file, read every char, close the file
 	 * to know the size of str
@@ -243,11 +252,11 @@ int main(int argc, char **argv)
 	if (str == NULL)
 	{
 		ft_putstr("Error\n");
-		return (1);
+		return (-1);
 	}
 		
 	fd = open(argv[1], 0);
-	ft_copydict_instring(str, fd);
+	ft_copydict_instring(str, fd);  
 
 
 	/* count lines, doesnt count empty lines
@@ -260,14 +269,14 @@ int main(int argc, char **argv)
 	if (keys == NULL)
 	{
 		ft_putstr("Error\n");
-		return (1);
+		return (-1);
 	}
 	keys[line_count] = 0;
 	values = malloc(sizeof(char *) * (line_count + 1));
 	if (values == NULL)
 	{
 		ft_putstr("Error\n");
-		return (1);
+		return (-1);
 	}
 	values[line_count] = 0;
 
