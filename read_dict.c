@@ -5,24 +5,34 @@
 
 void	ft_print_number(char *nbr, char **keys, char **values);
 
-int	ft_count_chars(int fd)
+int	ft_count_chars(char *dict)
 {
+	int fd;
 	int count_chars;
 	char buff;
 
+	fd = open(dict, 0);
 	count_chars = 0;
 	while (read(fd, &buff, 1))
 	{
 		count_chars++;
 	}
+	close(fd);
 	return count_chars;
 }
 
-void ft_copydict_instring(char *str, int fd)
+char *ft_copydict_instring(int size, char *dict)
 {
+	char *str;
+	int fd;
 	int i;	
 	char buff;
 
+	str = malloc(sizeof(char) * (size + 1));
+	if (str == NULL)
+		return (NULL);
+
+	fd = open(dict, 0);
 	i = 0;
 	while (read(fd, &buff, 1))
 	{
@@ -30,6 +40,8 @@ void ft_copydict_instring(char *str, int fd)
 		i++;
 	}
 	str[i] = '\0';
+	close(fd);
+	return (str);
 }
 
 int	ft_isnum(char c)
@@ -69,6 +81,17 @@ int	ft_count_lines(char *str)
 	return (count);
 }
 
+char **ft_allocate_array(int size)
+{
+	char **arr;
+
+	arr = malloc(sizeof(char *) * (size + 1));
+	if (arr == NULL)
+		return (NULL);
+	arr[size] = 0;
+	return (arr);
+}
+
 int		ft_lensep(char *str)
 {
 	int i;
@@ -87,6 +110,8 @@ char	*ft_fill_word(char *str)
 
 	len = ft_lensep(str);
 	word = malloc(sizeof(char) * (len + 1));
+	if (word == NULL)
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{
@@ -157,84 +182,32 @@ void	ft_free(char **ptr)
 
 int main(int argc, char **argv)
 {
-	int fd;
 	int char_count;
 	char *str;
 	int line_count;
 	char **keys;
 	char **values;
+	char *file;	
 
 	if (argc < 2 || argc > 3)
 		return (1);
-
-
-	/* opens the file, read every char, close the file
-	 * to know the size of str
-	 */
-	fd = open(argv[1], 0);
-	char_count = ft_count_chars(fd);
-	close(fd);
-
-
-	/* allocate the string to the right size
-	 * open the file again
-	 * write everything in the string
-	 */
-	str = malloc(sizeof(char) * (char_count + 1));
-	fd = open(argv[1], 0);
-	ft_copydict_instring(str, fd);
-
-
-	/* count lines, doesnt count empty lines
-	 * allocate two arrays of same size
-	 * they are arrays of char *ptr
-	 * last ptr set to null to signify end of array
-	 */
+	file = "numbers.dict";
+	if (argc == 3)
+		file = argv[1];
+	char_count = ft_count_chars(file);
+	str = ft_copydict_instring(char_count, file);
 	line_count = ft_count_lines(str);
-	keys = malloc(sizeof(char *) * (line_count + 1));
-	keys[line_count] = 0;
-	values = malloc(sizeof(char *) * (line_count + 1));
-	values[line_count] = 0;
-
-
-	/* basically some kind of ft_split
-	 * to go get every word
-	 * and fill corresponding array
-	 * maybe could be only one funciton ?
-	 * it has slightly different rules though
-	 */
+	keys = ft_allocate_array(line_count);
+	values = ft_allocate_array(line_count);
 	ft_fill_keys(keys, str);
 	ft_fill_values(values, str);
-
-
-	/* this just to see that the arrays are correctly filled
-	 * will be deleted
-	 */
-	/*
-	int i = 0;
-	while (keys[i])
-	{
-		printf("key: %s value: %s\n", keys[i], values[i]);	
-		i++;
-	}
-	*/
-
-	/* goes to the next file
-	 * and pass in the arrays
-	 * both files could use lots of cleaning
-	 * and lots of bugs still
-	 */
-	ft_print_number(argv[2], keys, values);
-
-	/* lets not forget to free everything, 
-	 * should check for null pointers,
-	 * etc etc
-	 * could run valgrind when file a bit cleaner
-	 */
+	if (argc == 3)
+		ft_print_number(argv[2], keys, values);
+	if (argc == 2)
+		ft_print_number(argv[1], keys, values);
 	ft_free(keys);
 	ft_free(values);
 	free(keys);
 	free(values);
-
 	free(str);
 }
