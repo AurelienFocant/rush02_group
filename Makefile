@@ -5,8 +5,8 @@ CFLAGS += -Wall -Werror -Wextra
 EXEC = rush-02
 
 SRC = \
-	  write_num.c\
-	  read_dict.c\
+	  ./write_num.c\
+	  ./read_dict.c\
 	  helpers.c\
 	  helpers2.c\
 	  ft_read_helpers.c\

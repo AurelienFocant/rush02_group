@@ -42,6 +42,8 @@ void	ft_print_orderof_magnitude(int mag, char **keys, char **values)
 		}
 }
 
+
+
 void	ft_print_number(char *nbr, char **keys, char **values)
 {
 	
@@ -51,16 +53,13 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	
 	if (len == 1 && nbr[0] == '0')
 		ft_print_zero(nbr[0], keys, values);
-
 	if (len % 3 == 0)
 		pos = HUNDREDS;
 	else if (len % 3 == 2)
 		pos = DOZENS;
 	else if (len % 3 == 1)
 		pos = UNITS;
-
 	mag = (len - 1) / 3;
-	
 	int i = 0;
 	while (i < len)
 	{

@@ -1,20 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_dict.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afocant <afocant@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/25 21:58:08 by afocant           #+#    #+#             */
+/*   Updated: 2024/02/25 21:58:10 by afocant          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 
 void	ft_print_number(char *nbr, char **keys, char **values);
-int	ft_isnum(char c);
-int	ft_isalpha(char c);
-int	ft_lensep(char *str);
+int		ft_isnum(char c);
+int		ft_isalpha(char c);
+int		ft_lensep(char *str);
 void	ft_free(char **ptr);
-int	ft_count_chars(char *dict);
-int	ft_count_lines(char *str);
+int		ft_count_chars(char *dict);
+int		ft_count_lines(char *str);
 char	**ft_allocate_array(int size);
 char	*ft_copydict_instring(char *dict, int size);
-
-
-
-
 
 char	*ft_fill_word(char *str)
 {
@@ -80,7 +88,6 @@ void	ft_fill_values(char **values, char *str)
 			str++;
 	}
 }
-
 
 int	main(int argc, char **argv)
 {
