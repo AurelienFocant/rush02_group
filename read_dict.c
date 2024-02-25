@@ -214,7 +214,7 @@ int main(int argc, char **argv)
 	 * open the file again
 	 * write everything in the string
 	 */
-	str = malloc(sizeof(char) * (char_count + 1);
+	str = malloc(sizeof(char) * (char_count + 1));
 	fd = open(argv[1], 0);
 	ft_copydict_instring(str, fd);
 

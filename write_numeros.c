@@ -77,6 +77,7 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	
 	int len = strlen(nbr);
 	int pos;
+	int mag;
 	
 	/* it s even a bit unclear to me still
 	 * We basically need length of the numeric string
@@ -91,12 +92,16 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	 * but a \n probably
 	 */
 
-	
-	/* could be simplified in this ?
-	 * pos = len - len % 3 ?
+
+	/* have to check for len = 0
+	 * --> empty string nbr
 	 */
-	/* it s just the starting position
-	 * notice pos++ down below
+
+	
+	/* starting position:
+	 * 0 if hundreds
+	 * 1 if dozens
+	 * 2 if units
 	 */
 	if (len % 3 == 0)
 		pos = 0;
@@ -105,6 +110,18 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	else if (len % 3 == 1)
 		pos = 2;
 
+
+	/* has to know how many groups
+	 * of 3 numbers after the
+	 * hundreds :
+	 * 0 none
+	 * 1 --> thousand
+	 * 2 --> millions
+	 * 3 --> billions
+	 * more ?? For bonuses
+	 * could % 3 and start at thousand again..
+	 */
+	mag = (len - 1) / 3;
 	
 	/* goes through every digit of the nbr
 	 * and get its position in keys array
@@ -115,7 +132,20 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	while (i < len)
 	{
 		ft_print_numero(nbr[i], pos, keys, values);
-		pos++;
+		if (pos == 2)
+		{	
+			if (mag > 0)
+			{
+				if (mag == 3)
+					printf("billion ");
+				else if (mag == 2)
+					printf("million ");
+				else if (mag == 1)
+					printf("thousand ");
+				mag--;
+			}
+		}
+		pos = (pos + 1) % 3;
 		i++;
 	}
 }
