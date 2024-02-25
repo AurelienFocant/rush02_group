@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   number_to_words_hundred.c                          :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vdarras <vdarras@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 17:15:16 by vdarras           #+#    #+#             */
-/*   Updated: 2024/02/24 19:54:33 by vdarras          ###   ########.fr       */
+/*   Updated: 2024/02/25 13:32:02 by vdarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,23 @@ void	ft_putstr(char *str)
 	}
 }
 
+int	empty_arg(int argc, char **argv)
+{
+	if (argc == 2)
+	{
+		if(argv[1][0] == '\0')
+			return (1)
+	}
+	return (0)
+}
+
 int	argv_zero_error(int argc, char **argv)
 {
 	if (argc == 2 && argv[1][0] == 0)
 		return (1);
 	if (argc == 3 && argv[2][0] == 0)
 		return (1);
+	return (0);
 }
 
 int	argv_error(int argc, char **argv)
@@ -57,10 +68,12 @@ int	argv_error(int argc, char **argv)
 			i++;
 		}	
 	}
+	return (0);
 }
 
 int	argc_error(int argc)
 {
 	if (argc != 2 || argc != 3)
 		return (1);
+	return (0);
 }
