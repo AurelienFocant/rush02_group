@@ -6,11 +6,11 @@ EXEC = rush-02
 
 SRC = \
 	  write_num.c\
-	  read_dict.c
+	  read_dict.c\
+	  helpers.c
 
 
 OBJ = $(SRC:.c=.o)
-
 
 
 all : $(EXEC)
@@ -24,7 +24,8 @@ write_num.o : write_num.c
 read_dict.o : read_dict.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-									#AJOUTER LES .c necessaires
+helpers.o : helpers.c
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 
 clean :
