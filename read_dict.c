@@ -6,23 +6,12 @@
 /*   By: afocant <afocant@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 21:58:08 by afocant           #+#    #+#             */
-/*   Updated: 2024/02/25 21:58:10 by afocant          ###   ########.fr       */
+/*   Updated: 2024/02/25 22:25:57 by afocant          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include "header.h"
 
-void	ft_print_number(char *nbr, char **keys, char **values);
-int		ft_isnum(char c);
-int		ft_isalpha(char c);
-int		ft_lensep(char *str);
-void	ft_free(char **ptr);
-int		ft_count_chars(char *dict);
-int		ft_count_lines(char *str);
-char	**ft_allocate_array(int size);
-char	*ft_copydict_instring(char *dict, int size);
 
 char	*ft_fill_word(char *str)
 {
@@ -89,6 +78,15 @@ void	ft_fill_values(char **values, char *str)
 	}
 }
 
+void	ft_free_all(char **keys, char **values, char *str)
+{
+	ft_free(keys);
+	ft_free(values);
+	free(keys);
+	free(values);
+	free(str);
+}
+
 int	main(int argc, char **argv)
 {
 	char	*str;
@@ -96,8 +94,14 @@ int	main(int argc, char **argv)
 	char	**values;
 	char	*file;	
 
-	if (argc < 2 || argc > 3)
-		return (1);
+	if (empty_arg(argc, argv) == -1)
+		return (-1);
+	if (argv_zero_error(argc, argv) == -1)
+		return (-1);
+	if (argv_error(argc, argv) == -1)
+		return (-1);
+	if (argc_error(argc) == -1)
+		return (-1);
 	file = "numbers.dict";
 	if (argc == 3)
 		file = argv[1];
@@ -110,9 +114,5 @@ int	main(int argc, char **argv)
 		ft_print_number(argv[2], keys, values);
 	if (argc == 2)
 		ft_print_number(argv[1], keys, values);
-	ft_free(keys);
-	ft_free(values);
-	free(keys);
-	free(values);
-	free(str);
+	ft_free_all(keys, values, str);
 }
