@@ -8,11 +8,12 @@ int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 void	ft_putstr(char *str);
 int		ft_find_index(char *str, char **keys);
-void	ft_print_zero(char c, char **keys, char **values)
+void	ft_print_zero(char c, char **keys, char **values);
 void	ft_print_hundreds(char c, char **keys, char **values);
 void	ft_print_tens(char c, char d, char **keys, char **values);
-void	ft_print_dozens(char c, char **keys, char **values)
-void	ft_print_units(char c, char **keys, char **values)
+void	ft_print_dozens(char c, char **keys, char **values);
+void	ft_print_units(char c, char **keys, char **values);
+
 
 void	ft_print_orderof_magnitude(int mag, char **keys, char **values)
 {

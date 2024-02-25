@@ -10,6 +10,8 @@ SRC = \
 	  helpers.c\
 	  helpers2.c\
 	  ft_read_helpers.c\
+	  ft_write_helpers.c\
+	  ft_write_helpers2.c
 
 
 OBJ = $(SRC:.c=.o)
@@ -33,6 +35,12 @@ helpers2.o : helpers2.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 ft_read_helpers.o : ft_read_helpers.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+ft_write_helpers.o : ft_write_helpers.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+	
+ft_write_helpers2.o : ft_write_helpers2.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean :

@@ -1,3 +1,6 @@
+void	ft_putstr(char *str);
+int		 ft_find_index(char *str, char **keys);
+
 void	ft_print_zero(char c, char **keys, char **values)
 {
 	char str[2];

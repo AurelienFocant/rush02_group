@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 int	ft_isnum(char c);
+void	ft_putstr(char *str);
 
 void	ft_free(char **ptr)
 {
@@ -23,7 +24,12 @@ int	ft_count_chars(char *dict)
 	int		count_chars;
 	char	buff;
 
-	fd = open(dict, 0);
+	fd = open(dict, O_RDONLY);
+	if (fd == -1)
+	{
+		ft_putstr("Dict error\n");
+		return (-1);
+	}
 	count_chars = 0;
 	while (read(fd, &buff, 1))
 	{
@@ -75,7 +81,12 @@ char	*ft_copydict_instring(char *dict, int size)
 	str = malloc(sizeof(char) * (size + 1));
 	if (str == NULL)
 		return (NULL);
-	fd = open(dict, 0);
+	fd = open(dict, O_RDONLY);
+	if (fd == -1)
+	{
+		ft_putstr("Dict error\n");
+		return (NULL);
+	}
 	i = 0;
 	while (read(fd, &buff, 1))
 	{
