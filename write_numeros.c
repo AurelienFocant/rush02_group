@@ -6,12 +6,6 @@
 #define DOZENS 1
 #define UNITS 2
 
-/* read this file second
- * and start at the bottom
- * above are only help functions
- */
-
-
 int		ft_strcmp(char *s1, char *s2)
 {
 	int i;
@@ -170,31 +164,9 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	int pos;
 	int mag;
 	
-	/* it s even a bit unclear to me still
-	 * We basically need length of the numeric string
-	 * to know which digit is in which position
-	 */
-	/* still lacks very important feature:
-	 * know where the number is to be 
-	 * able to write thousand, million etc
-	 */
-	/* also not forget to not print a space
-	 * at the very last digit
-	 * but a \n probably
-	 */
-
-
-	/* check if nbr is just 0
-	 */	
-
 	if (len == 1 && nbr[0] == '0')
 		ft_print_zero(nbr[0], keys, values);
 
-	/* starting position:
-	 * 0 if hundreds
-	 * 1 if dozens
-	 * 2 if units
-	 */
 	if (len % 3 == 0)
 		pos = HUNDREDS;
 	else if (len % 3 == 2)
@@ -202,24 +174,8 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	else if (len % 3 == 1)
 		pos = UNITS;
 
-
-	/* has to know how many groups
-	 * of 3 numbers after the
-	 * hundreds :
-	 * 0 none
-	 * 1 --> thousand
-	 * 2 --> millions
-	 * 3 --> billions
-	 * more ?? For bonuses
-	 * could % 3 and start at thousand again..
-	 */
 	mag = (len - 1) / 3;
 	
-	/* goes through every digit of the nbr
-	 * and get its position in keys array
-	 * prints it according to its position
-	 * == if he s hundreds, dozens or units
-	 */
 	int i = 0;
 	while (i < len)
 	{
