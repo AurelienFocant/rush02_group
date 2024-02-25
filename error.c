@@ -6,7 +6,7 @@
 /*   By: vdarras <vdarras@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 17:15:16 by vdarras           #+#    #+#             */
-/*   Updated: 2024/02/25 13:32:02 by vdarras          ###   ########.fr       */
+/*   Updated: 2024/02/25 18:19:16 by vdarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int	empty_arg(int argc, char **argv)
 	if (argc == 2)
 	{
 		if(argv[1][0] == '\0')
-			return (1)
+			return (1);
 	}
-	return (0)
+	return (0);
 }
 
 int	argv_zero_error(int argc, char **argv)
@@ -73,7 +73,7 @@ int	argv_error(int argc, char **argv)
 
 int	argc_error(int argc)
 {
-	if (argc != 2 || argc != 3)
+	if (argc != 2 && argc != 3)
 		return (1);
 	return (0);
 }

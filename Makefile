@@ -4,20 +4,27 @@ CFLAGS += -Wall -Werror -Wextra
 
 EXEC = rush-02
 
-SRC = $(wilcard *.c)
+SRC = $(wildcard *.c)
+
+OBJ = $(SRC:.c=.o)
 
 
 
-all : $(EXEC) fclean
-
-$(EXEC) : main.o
-	gcc $(CFLAGS) *.o -o rush-02  
+all : $(EXEC) clean
 
 main.o : main.c 
-	gcc $(CFLAGS) -c main.c -o main.o
+	$(CC) $(CFLAGS) -o $@ -c $<
 
-                                     # RAJOUTER TOUS LES .c
+error.o : error.c
+	$(CC) $(CFLAGS) -o $@ -c $<
 
-fclean : 
-	rm -rf *.o
-	rm -rf rush-02	
+$(EXEC) : $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
+clean :
+	rm -rf $(OBJ) 
+
+fclean : clean
+	rm -rf $(EXEC)	
+
+re : fclean all
