@@ -8,6 +8,7 @@ SRC = \
 	  write_num.c\
 	  read_dict.c\
 	  helpers.c\
+	  helpers2.c\
 	  ft_read_helpers.c\
 
 
@@ -26,6 +27,9 @@ read_dict.o : read_dict.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 helpers.o : helpers.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+helpers2.o : helpers2.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 ft_read_helpers.o : ft_read_helpers.c
