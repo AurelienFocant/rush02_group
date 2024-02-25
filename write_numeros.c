@@ -1,12 +1,19 @@
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 /* read this file second
  * and start at the bottom
  * above are only help functions
  */
 
-int	ft_find_index(char c, int pos, char **keys)
+void	ft_putstr(char *str)
+{
+	while (*str)
+		write(1, str++, 1);
+}
+
+int		ft_find_index(char c, int pos, char **keys)
 {
 	int i;
 	int count;
@@ -32,6 +39,15 @@ int	ft_find_index(char c, int pos, char **keys)
 		i++;
 	}
 	return (i);
+}
+
+void	ft_print_zero(char c, char **keys, char **values)
+{
+	int a;
+
+	a = ft_find_index(c, 2, keys);
+	ft_putstr(values[a]);
+	ft_putstr("\n");
 }
 
 void	ft_print_numero(char c, int pos, char **keys, char **values)
@@ -67,7 +83,7 @@ void	ft_print_numero(char c, int pos, char **keys, char **values)
 		if (c != '0')
 		{
 			int a = ft_find_index(c, pos, keys);
-			printf("%s ", values[a]);
+			printf("%s", values[a]);
 		}
 	}
 }
@@ -93,11 +109,12 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 	 */
 
 
-	/* have to check for len = 0
-	 * --> empty string nbr
-	 */
+	/* check if nbr is just 0
+	 */	
 
-	
+	if (len == 1 && nbr[0] == '0')
+		ft_print_zero(nbr[0], keys, values);
+
 	/* starting position:
 	 * 0 if hundreds
 	 * 1 if dozens
@@ -134,8 +151,12 @@ void	ft_print_number(char *nbr, char **keys, char **values)
 		ft_print_numero(nbr[i], pos, keys, values);
 		if (pos == 2)
 		{	
-			if (mag > 0)
+			if (mag >= 0)
 			{
+				if (mag > 1)
+					printf(" ");
+				else
+					printf("\n");
 				if (mag == 3)
 					printf("billion ");
 				else if (mag == 2)
