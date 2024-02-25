@@ -3,10 +3,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-/* start reading main ()
- * at the bottom
- * these are all helper functions
- */
+void	ft_print_number(char *nbr, char **keys, char **values);
+
 void	ft_putstr(char *str)
 {
 	int		i;
@@ -18,36 +16,16 @@ void	ft_putstr(char *str)
 		i++;
 	}
 }
-void	ft_print_number(char *nbr, char **keys, char **values);
 
-
-/* count every char of file
- * to copy the whole thing
- * inside a str
- */
-int	ft_count_chars(int fd)
+int	ft_copydict_instring(char *str, char **argv)
 {
-	int count_chars;
-	char buff;
-
-	count_chars = 0;
-	while (read(fd, &buff, 1))
-	{
-		if (read(fd, &buff, 1) == -1)
-		{
-			ft_putstr("Dict Error\n");
-			return (-1);
-		}
-		count_chars++;
-	}
-	return count_chars;
-}
-
-int	ft_copydict_instring(char *str, int fd)
-{
+	int	fd;
 	int i;
 	char buff;
 
+	fd = open(argv[1], 0);
+	if (fd == -1)
+		return (-1);
 	i = 0;
 	while (read(fd, &buff, 1))
 	{
@@ -60,6 +38,7 @@ int	ft_copydict_instring(char *str, int fd)
 		i++;
 	}
 	str[i] = '\0';
+	close(fd);
 	return (0);
 }
 
@@ -215,70 +194,47 @@ void	ft_free(char **ptr)
 	free(ptr[i]);
 }
 
-int		read_every_char(int fd, char **argv)
+int	ft_count_chars(char **argv)
 {
+	int		fd;
 	int		char_count;
+	char	buff;
 
 	fd = open(argv[1], 0);
 	if (fd == -1)
 	{
 		ft_putstr("Dict Error\n");
-		return (-1);                      // Erreur : fonction return -1, si read_every_char(...) == -1   ---> arreter le programmme depuis le main
+		return (-1);                 
 	}
-	char_count = ft_count_chars(fd);
-	if (char_count == -1)
+	while (read(fd, &buff, 1))
 	{
-		ft_putstr("Dict Error\n");
-		return (-1);
+		if (read(fd, &buff, 1) == -1)
+		{
+			ft_putstr("Dict Error\n");
+			return (-1);
+		}
+		char_count++;
 	}
 	close(fd);
 	return (char_count);
 }
 
-int main(int argc, char **argv)
+char *ft_allocate_string(char_count)
 {
-	int fd;
-	int char_count;
 	char *str;
-	int line_count;
-	char **keys;
-	char **values;
-	// ERROR CASE    + Error.c file
-	if (argc == 1 || argc > 3)
-		return (-1);
-	/* opens the file, read every char, close the file
-	 * to know the size of str
-	 */
-	char_count = read_every_char(fd, argv);
-	if (char_count == -1)
-		return (-1);
 
-	/* allocate the string to the right size
-	 * open the file again
-	 * write everything in the string
-	 */
 	str = malloc(sizeof(char) * (char_count + 1));
 	if (str == NULL)
 	{
 		ft_putstr("Error\n");
-		return (-1);
+		return (NULL);
 	}
-
-	fd = open(argv[1], 0);
-	if (fd == -1)
-		return (-1);
-
-	ft_copydict_instring(str, fd);
-	if (ft_copydict_instring(str, fd) == -1)
-		return (-1);
+	return (str);
+}
 
 
-	/* count lines, doesnt count empty lines
-	 * allocate two arrays of same size
-	 * they are arrays of char *ptr
-	 * last ptr set to null to signify end of array
-	 */
-	line_count = ft_count_lines(str);
+int ft_allocate_keys_values(char **keys, char **values, int line_count)
+{
 	keys = malloc(sizeof(char *) * (line_count + 1));
 	if (keys == NULL)
 	{
@@ -293,14 +249,38 @@ int main(int argc, char **argv)
 		return (-1);
 	}
 	values[line_count] = 0;
+	return (0);
+}
+
+int yo(int argc, char **argv)
+{
+	int fd;
+	int char_count;
+	char *str;
+	int line_count;
+	char **keys;
+	char **values;
+
+	if (argc == 1 || argc > 3)
+		return (-1);
+
+	char_count = ft_count_chars(argv);
+	if (char_count == -1)
+		return (-1);
+
+	ft_allocate_string(char_count);
+
+	
+	if (ft_copydict_instring(str, argv) == -1)
+		return (-1);
+
+	line_count = ft_count_lines(str);
+
+	if (ft_allocate_keys_values(keys, values, char_count) == -1)
+		return (-1);
 
 
-	/* basically some kind of ft_split
-	 * to go get every word
-	 * and fill corresponding array
-	 * maybe could be only one funciton ?
-	 * it has slightly different rules though
-	 */
+
 	ft_fill_keys(keys, str);
 	ft_fill_values(values, str);
 
@@ -308,21 +288,21 @@ int main(int argc, char **argv)
 	/* this just to see that the arrays are correctly filled
 	 * will be deleted
 	 */
-	/*
+	
 	int i = 0;
 	while (keys[i])
 	{
 		printf("key: %s value: %s\n", keys[i], values[i]);
 		i++;
 	}
-	*/
+	
 
 	/* goes to the next file
 	 * and pass in the arrays
 	 * both files could use lots of cleaning
 	 * and lots of bugs still
 	 */
-	ft_print_number(argv[2], keys, values);
+	//ft_print_number(argv[2], keys, values);
 
 	/* lets not forget to free everything,
 	 * should check for null pointers,
@@ -335,4 +315,10 @@ int main(int argc, char **argv)
 	free(values);
 
 	free(str);
+	return 0;
+}
+
+int main(int argc, char **argv)
+{
+	printf("%i\n", yo(argc, argv));
 }
