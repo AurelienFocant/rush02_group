@@ -7,7 +7,17 @@
  * at the bottom
  * these are all helper functions
  */
+void	ft_putstr(char *str)
+{
+	int		i;
 
+	i = 0;
+	while (str[i])
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+}
 void	ft_print_number(char *nbr, char **keys, char **values);
 
 
@@ -119,6 +129,11 @@ char	*ft_fill_word(char *str)
 
 	len = ft_lensep(str);
 	word = malloc(sizeof(char) * (len + 1));
+	if (word == NULL)
+	{
+		ft_putstr("Error\n");
+		return (NULL);
+	}
 	i = 0;
 	while (i < len)
 	{
@@ -189,6 +204,18 @@ void	ft_free(char **ptr)
 	free(ptr[i]);
 }
 
+int		read_every_char(int fd, char **argv)
+{
+	int		char_count;
+
+	fd = open(argv[1], 0);
+	char_count = ft_count_chars(fd);
+	close(fd);
+	return (char_count);
+}
+
+int
+
 int main(int argc, char **argv)
 {
 	int fd;
@@ -205,16 +232,20 @@ int main(int argc, char **argv)
 	/* opens the file, read every char, close the file
 	 * to know the size of str
 	 */
-	fd = open(argv[1], 0);
-	char_count = ft_count_chars(fd);
-	close(fd);
+	char_count = read_every_char(fd, argv);	
 
 
 	/* allocate the string to the right size
 	 * open the file again
 	 * write everything in the string
 	 */
-	str = malloc(sizeof(char) * (char_count + 1);
+	str = malloc(sizeof(char) * (char_count + 1));
+	if (str == NULL)
+	{
+		ft_putstr("Error\n");
+		return (1);
+	}
+		
 	fd = open(argv[1], 0);
 	ft_copydict_instring(str, fd);
 
@@ -226,8 +257,18 @@ int main(int argc, char **argv)
 	 */
 	line_count = ft_count_lines(str);
 	keys = malloc(sizeof(char *) * (line_count + 1));
+	if (keys == NULL)
+	{
+		ft_putstr("Error\n");
+		return (1);
+	}
 	keys[line_count] = 0;
 	values = malloc(sizeof(char *) * (line_count + 1));
+	if (values == NULL)
+	{
+		ft_putstr("Error\n");
+		return (1);
+	}
 	values[line_count] = 0;
 
 
