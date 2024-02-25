@@ -7,7 +7,8 @@ EXEC = rush-02
 SRC = \
 	  write_num.c\
 	  read_dict.c\
-	  helpers.c
+	  helpers.c\
+	  ft_read_helpers.c\
 
 
 OBJ = $(SRC:.c=.o)
@@ -27,6 +28,8 @@ read_dict.o : read_dict.c
 helpers.o : helpers.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
+ft_read_helpers.o : ft_read_helpers.c
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean :
 	rm -rf $(OBJ)
