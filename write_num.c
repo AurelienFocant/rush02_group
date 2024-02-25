@@ -1,5 +1,3 @@
-#include <string.h>
-#include <stdio.h>
 #include <unistd.h>
 
 #define HUNDREDS 0
@@ -16,6 +14,15 @@ int		ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
+int	ft_strlen(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
 void	ft_putstr(char *str)
 {
@@ -29,27 +36,7 @@ void	ft_putstr(char *str)
 	}
 }
 
-int		ft_find_index(char c, int pos, char **keys)
-{
-	int i;
-
-	i = 0;
-	while (keys[i])
-	{
-		if (pos == DOZENS)
-		{
-			if (c == keys[i][0] && '0' == keys[i][1])
-				return i;
-		}
-
-		else if (c == keys[i][0])
-			return i; 
-		i++;
-	}
-	return (i);
-}
-
-int		 ft_find_index_str(char *str, char **keys)
+int		 ft_find_index(char *str, char **keys)
 {
 	int i;
 
@@ -65,25 +52,29 @@ int		 ft_find_index_str(char *str, char **keys)
 
 void	ft_print_zero(char c, char **keys, char **values)
 {
+	char str[2];
 	int index;
+	str[0] = c;
+	str[1] = '\0';
 
-	index = ft_find_index(c, 2, keys);
+	index = ft_find_index(str, keys);
 	ft_putstr(values[index]);
 	ft_putstr("\n");
 }
 
 void	ft_print_hundreds(char c, char **keys, char **values)
 {
-	int pos;
 	int index;
+	char str[2];
 
-	pos = HUNDREDS;
+	str[0] = c;
+	str[1] = '\0';
 
 	if (c != 0)
 	{
-		index = ft_find_index(c, pos, keys);
+		index = ft_find_index(str, keys);
 		ft_putstr(values[index]);
-		index = ft_find_index_str("100", keys);
+		index = ft_find_index("100", keys);
 		ft_putstr(" ");
 		ft_putstr(values[index]);
 	}
@@ -98,34 +89,37 @@ void	ft_print_tens(char c, char d, char **keys, char **values)
 	str[1] = d;
 	str[2] = '\0';	
 
-	index = ft_find_index_str(str, keys);
+	index = ft_find_index(str, keys);
 	ft_putstr(values[index]);
 }
 
 void	ft_print_dozens(char c, char **keys, char **values)
 {
-	int pos;
 	int index;
+	char str[3];
 
-	pos = DOZENS;
+	str[0] = c;
+	str[1] = '0';
+	str[2] = '\0';
 
 	if (c != 0)
 	{
-		index = ft_find_index(c, pos, keys);
+		index = ft_find_index(str, keys);
 		ft_putstr(values[index]);
 	}
 }
 
 void	ft_print_units(char c, char **keys, char **values)
 {
-	int pos;
+	char str[2];
 	int index;
 
-	pos = UNITS;
+	str[0] = c;
+	str[1] = '\0';
 
 	if (c != 0)
 	{
-		index = ft_find_index(c, pos, keys);
+		index = ft_find_index(str, keys);
 		ft_putstr(values[index]);
 	}
 }
@@ -138,19 +132,19 @@ void	ft_print_orderof_magnitude(int mag, char **keys, char **values)
 		{
 			if (mag == 3)
 			{
-				index = ft_find_index_str("1000000000", keys);
+				index = ft_find_index("1000000000", keys);
 				ft_putstr(values[index]);
 				ft_putstr(" ");
 			}
 			else if (mag == 2)
 			{
-				index = ft_find_index_str("1000000", keys);
+				index = ft_find_index("1000000", keys);
 				ft_putstr(values[index]);
 				ft_putstr(" ");
 			}
 			else if (mag == 1)
 			{
-				index = ft_find_index_str("1000", keys);
+				index = ft_find_index("1000", keys);
 				ft_putstr(values[index]);
 				ft_putstr(" ");
 			}
@@ -160,7 +154,7 @@ void	ft_print_orderof_magnitude(int mag, char **keys, char **values)
 void	ft_print_number(char *nbr, char **keys, char **values)
 {
 	
-	int len = strlen(nbr);
+	int len = ft_strlen(nbr);
 	int pos;
 	int mag;
 	
